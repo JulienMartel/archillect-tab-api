@@ -10,33 +10,38 @@ if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
   puppeteer = require("puppeteer");
 }
 
-app.get("/api", async (req, res) => {
-  let options = {};
-
-  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-    options = {
+app.get("/", async (req, res) => {
+  try {
+    let browser = await puppeteer.launch({
       args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
       defaultViewport: chrome.defaultViewport,
       executablePath: await chrome.executablePath,
-      headless: true,
+      headless: false,
       ignoreHTTPSErrors: true,
-    };
-  }
+    })
+    let page = await browser.newPage()
 
-  try {
-    let browser = await puppeteer.launch(options);
+    await page.goto(
+      `https://nitter.net/archillect`, 
+      {waitUntil: 'networkidle2'}
+    )
 
-    let page = await browser.newPage();
-    await page.goto("https://www.google.com");
-    res.send(await page.title());
+    //grab last image in feed
+    const src = await page.$eval(
+      'div.timeline-container a.still-image > img',
+      el => el.src
+    )
+  
+    res.json({ src })
+
   } catch (err) {
-    console.error(err);
-    return null;
+    console.error(err)
+    return null
   }
 });
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log("Server started");
+  console.log("Server started")
 });
 
 module.exports = app;
