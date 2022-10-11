@@ -39,9 +39,10 @@ const scrapeImgUrl = async () => {
 
 app.get("/refetch", async (req, res) => {
   try {
-    const { authorization } = req.headers;
+    console.log(req.headers)
+    const { Authorization } = req.headers;
 
-    if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
+    if (Authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
       await scrapeImgUrl()
       res.status(200).json({ success: true });
     } else {
