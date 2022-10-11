@@ -10,38 +10,51 @@ if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
   puppeteer = require("puppeteer");
 }
 
-app.get("/", async (req, res) => {
+let imgUrl = ""
+
+const scrapeImgUrl = async () => {
+  let browser = await puppeteer.launch({
+    args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+    defaultViewport: chrome.defaultViewport,
+    executablePath: await chrome.executablePath,
+    headless: false,
+    ignoreHTTPSErrors: true,
+  })
+  let page = await browser.newPage()
+
+  await page.goto(
+    `https://nitter.net/archillect`, 
+    {waitUntil: 'networkidle2'}
+  )
+
+  //grab last image in feed
+  const src = await page.$eval(
+    'div.timeline-container a.still-image > img',
+    el => el.src
+  )
+
+  imgUrl = src
+  return null
+}
+
+app.get("/refetch", async (req, res) => {
   try {
-    let browser = await puppeteer.launch({
-      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
-      defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
-      headless: false,
-      ignoreHTTPSErrors: true,
-    })
-    let page = await browser.newPage()
+    const { authorization } = req.headers;
 
-    await page.goto(
-      `https://nitter.net/archillect`, 
-      {waitUntil: 'networkidle2'}
-    )
-
-    //grab last image in feed
-    const src = await page.$eval(
-      'div.timeline-container a.still-image > img',
-      el => el.src
-    )
-  
-    res.json({ src })
-
+    if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
+      await scrapeImgUrl()
+      res.status(200).json({ success: true });
+    } else {
+      res.status(401).json({ success: false });
+    }  
   } catch (err) {
-    console.error(err)
-    return null
+    return res.status(500).json({ statusCode: 500, message: err.message })
   }
-});
+})
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Server started")
-});
+app.get("/", async (req, res) => {
+  res.json({ imgUrl })
+})
 
-module.exports = app;
+app.listen(process.env.PORT)
+module.exports = app
