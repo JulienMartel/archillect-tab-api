@@ -31,28 +31,22 @@ const scrapeImgUrl = async () => {
 }
 
 
-
 const init = async () => {
   console.log("init")
   await scrapeImgUrl()
-
   cron.schedule('*/10 * * * *', async () => {
     console.log("cron task started")
-
     await scrapeImgUrl()
-  })
-
-  app.get("/", async (req, res) => {
-    console.log("request received")
-    res.json({ imgUrl })
-  })
-
-  app.listen(process.env.PORT)
+  })  
 }
 
 init()
 
+app.get("/", async (req, res) => {
+  console.log("request received")
+  res.json({ imgUrl })
+})
 
-
+app.listen(process.env.PORT)
 
 module.exports = app
