@@ -2,18 +2,15 @@
 const app = require("express")();
 const chrome = require("chrome-aws-lambda");
 const puppeteer = require("puppeteer-core");
-const JSONdb = require('simple-json-db')
-const { join } = require("node:path")
 
-const db = new JSONdb(join(process.cwd(), '/db.json'))
-console.log(db)
+let imgUrl = ""
 
 const scrapeImgUrl = async () => {
   let browser = await puppeteer.launch({
     args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
     defaultViewport: chrome.defaultViewport,
     executablePath: await chrome.executablePath,
-    headless: true,
+    headless: false,
     ignoreHTTPSErrors: true,
   })
   let page = await browser.newPage()
@@ -29,7 +26,7 @@ const scrapeImgUrl = async () => {
     el => el.src
   )
 
-  db.set({ src })
+  imgUrl = src
   return null
 }
 
@@ -43,7 +40,7 @@ app.post("/refetch", async (req, res) => {
 })
 
 app.get("/", async (req, res) => {
-  res.json({ src: db.get("src") || "" })
+  res.json({ imgUrl })
 })
 
 app.listen(process.env.PORT)
