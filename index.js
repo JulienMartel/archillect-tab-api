@@ -6,7 +6,7 @@ const JSONdb = require('simple-json-db')
 const { join, dirname } = require("node:path")
 const { fileURLToPath } = require('node:url')
 
-const _dirname = dirname(fileURLToPath(import.meta.url))
+const _dirname = dirname(fileURLToPath(process.cwd()))
 console.log(dirname)
 
 const db = new JSONdb(join(_dirname, '/db.json'))
