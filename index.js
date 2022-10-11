@@ -1,17 +1,16 @@
 // https://github.com/michaelkitas/Puppeteer-Vercel
 const app = require("express")();
-
 const chrome = require("chrome-aws-lambda");
 const puppeteer = require("puppeteer-core");
-
-let imgUrl = ""
+const JSONdb = require('simple-json-db')
+const db = new JSONdb('./db.json')
 
 const scrapeImgUrl = async () => {
   let browser = await puppeteer.launch({
     args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
     defaultViewport: chrome.defaultViewport,
     executablePath: await chrome.executablePath,
-    headless: false,
+    headless: true,
     ignoreHTTPSErrors: true,
   })
   let page = await browser.newPage()
@@ -27,7 +26,7 @@ const scrapeImgUrl = async () => {
     el => el.src
   )
 
-  imgUrl = src
+  db.set({ src })
   return null
 }
 
@@ -41,7 +40,7 @@ app.post("/refetch", async (req, res) => {
 })
 
 app.get("/", async (req, res) => {
-  res.json({ imgUrl })
+  res.json({ src: db.get("src") || "" })
 })
 
 app.listen(process.env.PORT)
