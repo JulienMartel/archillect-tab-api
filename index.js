@@ -3,14 +3,10 @@ const app = require("express")();
 const chrome = require("chrome-aws-lambda");
 const puppeteer = require("puppeteer-core");
 const JSONdb = require('simple-json-db')
-const { join, dirname } = require("node:path")
-const { fileURLToPath } = require('node:url')
+const { join } = require("node:path")
 
-const _dirname = dirname(fileURLToPath(process.cwd()))
-console.log(dirname)
-
-const db = new JSONdb(join(_dirname, '/db.json'))
-console.log(dirname)
+const db = new JSONdb(join(process.cwd(), '/db.json'))
+console.log(db)
 
 const scrapeImgUrl = async () => {
   let browser = await puppeteer.launch({
