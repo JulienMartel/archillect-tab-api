@@ -2,8 +2,7 @@
 const app = require("express")();
 const chrome = require("chrome-aws-lambda");
 const puppeteer = require("puppeteer-core");
-
-let imgUrl = ""
+const { getSrc, setSrc } = require("./lib/utils")
 
 const scrapeImgUrl = async () => {
   let browser = await puppeteer.launch({
@@ -26,8 +25,9 @@ const scrapeImgUrl = async () => {
     el => el.src
   )
 
-  imgUrl = src
-  return null
+  await setSrc(src)
+
+  return
 }
 
 app.post("/refetch", async (req, res) => {
@@ -40,7 +40,8 @@ app.post("/refetch", async (req, res) => {
 })
 
 app.get("/", async (req, res) => {
-  res.json({ imgUrl })
+  const src = await getSrc()
+  res.status(200).json({ src })
 })
 
 app.listen(process.env.PORT)
