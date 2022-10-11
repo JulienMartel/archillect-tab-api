@@ -1,14 +1,7 @@
 const app = require("express")();
-
-let chrome = {};
-let puppeteer;
-
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chrome = require("chrome-aws-lambda");
-  puppeteer = require("puppeteer-core");
-} else {
-  puppeteer = require("puppeteer");
-}
+const cron = require('node-cron');
+const chrome = require("chrome-aws-lambda");
+const puppeteer = require("puppeteer-core");
 
 let imgUrl = ""
 
@@ -37,25 +30,23 @@ const scrapeImgUrl = async () => {
   return null
 }
 
-app.get("/refetch", async (req, res) => {
-  try {
-    console.log(req.headers)
-    const { Authorization } = req.headers;
-
-    if (Authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
-      await scrapeImgUrl()
-      res.status(200).json({ success: true });
-    } else {
-      res.status(401).json({ success: false });
-    }  
-  } catch (err) {
-    return res.status(500).json({ statusCode: 500, message: err.message })
-  }
-})
-
 app.get("/", async (req, res) => {
   res.json({ imgUrl })
 })
 
-app.listen(process.env.PORT)
+const init = async () => {
+  await scrapeImgUrl()
+
+  cron.schedule('*/10 * * * *', async () => {
+    await scrapeImgUrl()
+  })
+
+  app.listen(process.env.PORT)
+}
+
+init()
+
+
+
+
 module.exports = app
