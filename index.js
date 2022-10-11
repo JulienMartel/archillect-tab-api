@@ -30,15 +30,21 @@ const scrapeImgUrl = async () => {
   return null
 }
 
-app.get("/", async (req, res) => {
-  res.json({ imgUrl })
-})
+
 
 const init = async () => {
+  console.log("init")
   await scrapeImgUrl()
 
   cron.schedule('*/10 * * * *', async () => {
+    console.log("cron task started")
+
     await scrapeImgUrl()
+  })
+
+  app.get("/", async (req, res) => {
+    console.log("request received")
+    res.json({ imgUrl })
   })
 
   app.listen(process.env.PORT)
