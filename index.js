@@ -25,14 +25,14 @@ const scrapeImgUrl = async () => {
     el => el.src
   )
 
-  await setSrc(src)
-
-  return
+  return src
 }
 
 app.post("/refetch", async (req, res) => {
   try {
-    await scrapeImgUrl()
+    const src = await scrapeImgUrl()
+    await setSrc(src)
+    
     res.status(200).json({ success: true });
   } catch (err) {
     return res.status(500).json({ statusCode: 500, message: err.message })
