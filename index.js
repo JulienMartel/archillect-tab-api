@@ -1,7 +1,16 @@
 const app = require("express")();
-const cron = require('node-cron');
-const chrome = require("chrome-aws-lambda");
-const puppeteer = require("puppeteer-core");
+// const JSONdb = require('simple-json-db');
+// const db = new JSONdb('./db.json');
+
+let chrome = {};
+let puppeteer;
+
+if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+  chrome = require("chrome-aws-lambda");
+  puppeteer = require("puppeteer-core");
+} else {
+  puppeteer = require("puppeteer");
+}
 
 let imgUrl = ""
 
@@ -30,23 +39,18 @@ const scrapeImgUrl = async () => {
   return null
 }
 
-
-const init = async () => {
-  console.log("init")
-  await scrapeImgUrl()
-  cron.schedule('*/10 * * * *', async () => {
-    console.log("cron task started")
+app.get("/refetch", async (req, res) => {
+  try {
     await scrapeImgUrl()
-  })  
-}
-
-init()
+    res.status(200).json({ success: true });
+  } catch (err) {
+    return res.status(500).json({ statusCode: 500, message: err.message })
+  }
+})
 
 app.get("/", async (req, res) => {
-  console.log("request received")
   res.json({ imgUrl })
 })
 
 app.listen(process.env.PORT)
-
 module.exports = app
