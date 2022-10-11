@@ -39,7 +39,7 @@ const scrapeImgUrl = async () => {
   return null
 }
 
-app.get("/refetch", async (req, res) => {
+app.post("/refetch", async (req, res) => {
   try {
     await scrapeImgUrl()
     res.status(200).json({ success: true });
