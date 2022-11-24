@@ -6,6 +6,11 @@ const cors = require("cors");
 
 app.use(cors());
 
+app.use(async (req, res, next) => {
+  await client.connect();
+  next();
+});
+
 app.get("/", async (_, res) => {
   try {
     res.sendFile(path.join(__dirname, "index.html"));
