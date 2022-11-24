@@ -4,10 +4,6 @@ const { getRandom, getTv, getPost, getRecent } = require("./lib/utils");
 const { client } = require("./lib/mongodb");
 const cors = require("cors");
 
-// app.use(async (_, res, next) => {
-//   next();
-// });
-
 app.use(cors());
 
 app.get("/", async (_, res) => {
