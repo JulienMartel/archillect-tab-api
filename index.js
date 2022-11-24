@@ -12,7 +12,11 @@ app.use(async (_, res, next) => {
 app.use(cors());
 
 app.get("/", async (_, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+  try {
+    res.sendFile(path.join(__dirname, "index.html"));
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.get("/random", async (_, res) => {
