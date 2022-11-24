@@ -16,6 +16,7 @@ app.get("/", async (_, res) => {
 
 app.get("/random", async (_, res) => {
   try {
+    console.log("testyyyy");
     const img = await getRandom();
     res.status(200).json(img);
   } catch (error) {
