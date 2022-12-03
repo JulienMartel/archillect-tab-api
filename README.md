@@ -2,10 +2,6 @@
 
 unofficial archillect api
 
-<!-- related:
+related:
 - [archillect-tab](https://github.com/JulienMartel/archillect-tab)
-- [archillect-tab-archiver](https://github.com/JulienMartel/archillect-tab-archiver) -->
-
-|related|
-|:-:| --- |
-|[archillect-tab](https://github.com/JulienMartel/archillect-tab)|[archillect-tab-archiver](https://github.com/JulienMartel/archillect-tab-archiver)|
+- [archillect-tab-archiver](https://github.com/JulienMartel/archillect-tab-archiver)
