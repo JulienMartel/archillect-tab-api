@@ -4,6 +4,7 @@ const app = require("express")();
 const { getRandom, getTv, getPost, getRecent } = require("./lib/utils");
 const { client } = require("./lib/mongodb");
 const cors = require("cors");
+const fetch = require("node-fetch");
 
 const ifBase64 = async (img, isBase64, isGif) => {
   if (!isBase64) return img;
