@@ -22,24 +22,43 @@
       }
       ul {
         list-style-type: none;
-        margin: 8px 0;
+        margin: 16px 0;
       }
       li {
-        margin: 4px 0;
+        margin: 12px 0;
+      }
+      code {
+        background-color: rgb(0, 0, 0);
+        padding: 3px 8px;
+        border-radius: 4px;
+      }
+      section {
+        margin: 8px 0;
+      }
+      .divider {
+        margin: 16px 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
     </style>
     <title>Unofficial Archillect API</title>
   </head>
   <body>
     <div>
-      <h1>Unofficial Archillect API</h1>
-      <ul>
-        <li>/ recent / [count]</li>
-        <li>/ random</li>
-        <li>/ tv</li>
-        <li>/ post / [postId]</li>
-      </ul>
       <a href="https://github.com/JulienMartel/archillect-tab-api">github</a>
+      <h1>Unofficial Archillect API</h1>
+
+      <ul>
+        <li><code>/recent/[count]</code></li>
+        <li><code>/random</code></li>
+        <li><code>/tv</code></li>
+        <li><code>/post/[postId]</code></li>
+      </ul>
+
+      <div class="divider"></div>
+
+      <section>
+        <p>add <code>?b64=true</code> to get the <code>src</code> as base64</p>
+      </section>
     </div>
   </body>
 </html>
