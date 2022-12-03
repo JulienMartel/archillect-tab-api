@@ -1,7 +1,11 @@
 ## archillect-tab-api
 
-serves the most recent image fromarchillect in b46 URL format
+unofficial archillect api
 
-related:
+<!-- related:
 - [archillect-tab](https://github.com/JulienMartel/archillect-tab)
-- [archillect-tab-scraper](https://github.com/JulienMartel/archillect-tab-scraper)
+- [archillect-tab-archiver](https://github.com/JulienMartel/archillect-tab-archiver) -->
+
+|related|
+|:---:|:--:|
+|[archillect-tab](https://github.com/JulienMartel/archillect-tab)|[archillect-tab-archiver](https://github.com/JulienMartel/archillect-tab-archiver)|
