@@ -17,10 +17,51 @@ const ifBase64 = async (img, isBase64, isGif) => {
   return { ...img, src };
 };
 
+const checkIsApiKeyValid = async (apiKey = "none-provided") => {
+  try {
+    const res = await fetch(
+      "https://api.gumroad.com/v2/licenses/verify?product_permalink=aw&license_key=" +
+        apiKey,
+      { method: "POST" }
+    );
+
+    const json = await res.json();
+
+    const {
+      success,
+      subscription_ended_at,
+      subscription_cancelled_at,
+      subscription_failed_at,
+    } = json;
+
+    return (
+      success &&
+      subscription_ended_at !== null &&
+      subscription_cancelled_at !== null &&
+      subscription_failed_at !== null
+    );
+  } catch (error) {
+    return false;
+  }
+};
+
 app.use(cors());
 
 app.use(async (req, res, next) => {
   await client.connect();
+  next();
+});
+
+app.use(async (req, res, next) => {
+  const apiKey = req.headers["x-api-key"];
+
+  const isValid = await checkIsApiKeyValid(apiKey);
+
+  if (!isValid) {
+    res.status(401).json({ error: "Invalid license key" });
+    return;
+  }
+
   next();
 });
 
