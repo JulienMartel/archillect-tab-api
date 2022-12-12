@@ -53,6 +53,11 @@ app.use(async (req, res, next) => {
 });
 
 app.use(async (req, res, next) => {
+  if (req.path === "/") {
+    next();
+    return;
+  }
+
   const apiKey = req.headers["x-api-key"];
 
   const isValid = await checkIsApiKeyValid(apiKey);
