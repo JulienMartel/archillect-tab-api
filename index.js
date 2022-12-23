@@ -20,7 +20,7 @@ const ifBase64 = async (img, isBase64, isGif) => {
 const checkIsApiKeyValid = async (apiKey = "none-provided") => {
   try {
     const res = await fetch(
-      "https://api.gumroad.com/v2/licenses/verify?product_permalink=aw&license_key=" +
+      "https://api.gumroad.com/v2/licenses/verify?product_permalink=aw&product_id=7ioFHgCXrjpA6DL6W9Im1A==&license_key=" +
         apiKey,
       { method: "POST" }
     );
